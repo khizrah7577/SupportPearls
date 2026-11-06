@@ -1,0 +1,38 @@
+# SupportPearlz — pinned for reproducibility (Python 3.10–3.12 recommended; 3.13+ may work)
+langchain==0.3.27
+langchain-core==0.3.76
+langchain-community==0.3.29
+langchain-openai==0.3.33
+langchain-text-splitters==0.3.11
+langchain-chroma==0.2.5
+langchain-huggingface==0.3.1
+langchain-ollama==0.3.8
+
+chromadb==1.0.20
+pydantic==2.11.9
+pydantic-settings==2.10.1
+python-dotenv==1.1.1
+
+# Document loaders
+pypdf==5.9.0
+docx2txt==0.9
+python-docx==1.2.0
+unstructured==0.18.15
+markdown==3.9
+
+# PDF generation for knowledge base authoring
+reportlab==4.4.3
+
+# Utilities
+numpy==2.3.3
+rich==14.1.0
+tenacity==9.1.2
+tiktoken==0.11.0
+httpx==0.28.1
+
+# Web UI (1.45+ works with protobuf 6+ required by chromadb)
+streamlit==1.66.1
+protobuf>=6.33.5
+
+# Optional local embeddings (EMBEDDING_PROVIDER=huggingface)
+sentence-transformers==5.1.0

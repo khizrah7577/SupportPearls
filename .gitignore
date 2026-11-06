@@ -1,0 +1,53 @@
+# Secrets and env — never commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+secrets.json
+
+# Vector store (regenerate via: python -m src.ingestion.build_index --rebuild)
+data/vector_store/
+!data/vector_store/.gitkeep
+
+# Python
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# Install / local artefacts
+pip_install.log
+*.whl
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Logs and caches
+logs/
+*.log
+.cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.huggingface/
+*.chromadb
+
+# Evaluation artefacts that may contain API traces
+evaluation/results/*.json
+!evaluation/results/.gitkeep
+
+# Notebooks checkpoints
+.ipynb_checkpoints/

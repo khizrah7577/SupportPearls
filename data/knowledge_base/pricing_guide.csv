@@ -1,0 +1,16 @@
+sku,product_name,description,list_price_pkr,promo_price_pkr,availability,product_line,notes
+AP300-MAIN,AquaPearl 300,Smart RO water purifier 300 series,45000,41999,in_stock,AquaPearl 300,Current generation
+AP500-MAIN,AquaPearl 500 Pro,Smart RO+UV water purifier 500 Pro,68500,64999,in_stock,AquaPearl 500 Pro,Current generation
+AP200-MAIN,AquaPearl 200,Discontinued RO purifier,0,0,discontinued,AquaPearl 200,Parts only via service
+AERO-MINI,AeroPearl Mini,Compact HEPA air purifier,28900,26999,in_stock,AeroPearl Mini,Current generation
+AERO-CLASSIC,AeroPearl Classic,Discontinued tower air purifier,0,0,discontinued,AeroPearl Classic,No new units
+FLT-SED-01,Sediment Pre-Filter Cartridge,Replacement sediment filter for AquaPearl 300/500,2200,1999,in_stock,AquaPearl 500 Pro,Fits 300 and 500 Pro
+FLT-CAR-01,Carbon Filter Cartridge,Activated carbon stage,2800,2599,in_stock,AquaPearl 500 Pro,Fits 300 and 500 Pro
+FLT-RO-01,RO Membrane,Reverse osmosis membrane,6500,5999,in_stock,AquaPearl 500 Pro,18-24 month typical life
+FLT-UV-01,UV Lamp Module,UV sterilisation lamp for 500 Pro,4500,4299,in_stock,AquaPearl 500 Pro,Service Partner install recommended
+FLT-HEPA-01,HEPA Filter AeroPearl Mini,H13 HEPA replacement,3900,3699,in_stock,AeroPearl Mini,
+BUNDLE-AP500-YR1,AquaPearl 500 Pro Year-1 Filter Bundle,Sediment+Carbon+RO kit,10500,9499,in_stock,AquaPearl 500 Pro,Promotional bundle
+INST-PROF-METRO,Professional Installation Metro,Authorised install Karachi/Lahore/Islamabad,2500,2500,in_stock,all,See Installation Guide
+AMC-BASIC,Annual Maintenance Basic,1 visit/year basic AMC,8000,8000,in_stock,all,See Service Agreement
+AMC-PLUS,Annual Maintenance Plus,2 visits/year plus priority SLA,14000,14000,in_stock,all,See Service Agreement
+AMC-PREMIUM,Annual Maintenance Premium,4 visits/year 24h response metro,22000,20999,in_stock,all,See Service Agreement
