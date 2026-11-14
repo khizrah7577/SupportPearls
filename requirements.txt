@@ -33,6 +33,11 @@ httpx==0.28.1
 # Web UI (1.45+ works with protobuf 6+ required by chromadb)
 streamlit==1.66.1
 protobuf>=6.33.5
+pandas==2.3.2
+
+# Auth (bcrypt-hashed passwords — never store plaintext)
+bcrypt==4.3.0
 
 # Optional local embeddings (EMBEDDING_PROVIDER=huggingface)
+# Note: heavy for Streamlit Cloud free tier; prefer OpenAI embeddings in cloud secrets if needed.
 sentence-transformers==5.1.0

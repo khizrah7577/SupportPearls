@@ -11,6 +11,10 @@ secrets.json
 data/vector_store/
 !data/vector_store/.gitkeep
 
+# Local auth / conversation database (user passwords hashed, still private)
+data/app.db
+data/*.db
+
 # Python
 __pycache__/
 **/__pycache__/

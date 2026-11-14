@@ -1,18 +1,17 @@
 # SupportPearlz
 
-Retrieval-augmented customer support knowledge agent for **Pearlz Home Systems**, built with Python and LangChain.
+Premium Streamlit application for **Pearlz Home Systems** — a grounded LangChain RAG customer-support assistant with real user accounts, conversation history, citations, and a modern SaaS-style UI.
 
-Ingestion builds a **persistent** Chroma index once. The query path loads that index from disk, rewrites follow-ups into standalone questions, retrieves relevant chunks, and generates a **schema-validated** answer with citations — or refuses when the knowledge base does not support an answer.
+## Features
 
-## Prerequisites
+- **Secure auth** — signup / login / password reset with **bcrypt** password hashes (SQLite)
+- **Dashboard** — welcome, usage stats from your real conversations, recent chats, suggested prompts
+- **Premium chat** — grounded RAG answers, citations, confidence badges, regenerate, feedback, export
+- **History** — search, rename, categorize, delete; conversations isolated per user
+- **Settings** — profile, preferred model, session API key, password change
+- **RAG pipeline** — persistent Chroma index, query condensation, structured outputs, refusals
 
-- Python **3.10–3.12** recommended (3.13+ may work depending on wheel availability)
-- An OpenAI API key **or** a local Ollama instance
-- ~500 MB disk for dependencies / local embedding models
-
-Recorded environment for this submission: see `python --version` after creating the venv.
-
-## Quick start
+## Quick start (local)
 
 ```bash
 cd SupportPearls
@@ -24,128 +23,77 @@ python -m venv .venv
 # source .venv/bin/activate
 
 pip install -r requirements.txt
-copy .env.example .env   # then edit .env with your API key
+copy .env.example .env
 ```
 
-### 1. Generate binary KB documents (PDF / DOCX)
-
-Markdown and CSV files are already in `data/knowledge_base/`. Generate the PDFs and DOCX once:
+Generate binary KB docs (PDF / DOCX) if needed:
 
 ```bash
 python scripts/generate_kb_binaries.py
 ```
 
-### 2. Build the vector index (once per KB update)
+Build the vector index once:
 
 ```bash
 python -m src.ingestion.build_index --rebuild
 ```
 
-Smoke-check similarity search:
-
-```bash
-python -m src.ingestion.build_index --search "how long is the warranty"
-```
-
-### 3. Chat — Streamlit UI (recommended)
+Launch the app:
 
 ```bash
 streamlit run app.py
 ```
 
-Opens a branded login screen where you paste your **OpenAI API key at runtime** (session-only; not written to disk by the UI). After connecting you get multi-turn chat with citations, confidence badges, follow-up rewriting, and a sidebar to rebuild the index or filter by document type.
+1. Create an account on the login screen  
+2. Open **Settings** and paste your OpenAI API key (session-only), **or** set `OPENAI_API_KEY` in `.env` / Streamlit secrets  
+3. Start chatting  
 
-### 4. Chat — CLI
+CLI still available: `python -m src.app_cli`
 
-```bash
-python -m src.app_cli
+## Streamlit Cloud
+
+1. Connect the GitHub repo `khizrah7577/SupportPearls`  
+2. Main file: `app.py`  
+3. Branch: `main`  
+4. In **Secrets**, add:
+
+```toml
+OPENAI_API_KEY = "sk-..."
 ```
 
-Commands inside the CLI: `/reset`, `/quit`, `/filter policy`, `/clearfilter`, `/sources`.
+5. Deploy. On first run, open Chat → **Build index now** if the vector store is empty (Cloud does not ship the local Chroma folder).
 
-### 5. Configuration smoke check
+> Note: user accounts and chat history use SQLite under `data/app.db`. On Streamlit Cloud the filesystem can reset when the app sleeps/redeploys — for production persistence use an external database.
 
-```bash
-python -m src.config
-```
+## Environment
 
-## Environment variables
-
-See `.env.example` for the full list. Important keys:
+See `.env.example`. Important:
 
 | Variable | Purpose |
 |---|---|
-| `OPENAI_API_KEY` | Required when using OpenAI for LLM or embeddings |
-| `LLM_PROVIDER` / `LLM_MODEL` | Chat model selection |
-| `EMBEDDING_PROVIDER` / `EMBEDDING_MODEL` | Must match the model used to build the index |
-| `CHUNK_SIZE` / `CHUNK_OVERLAP` | Chunking tunables |
-| `RETRIEVAL_K` / `RETRIEVAL_STRATEGY` / `SCORE_THRESHOLD` | Retriever policy |
-| `VECTOR_STORE_PATH` | Persisted Chroma directory (git-ignored) |
-
-**No API keys or magic numbers belong in business logic** — change behaviour via `.env`.
-
-### Local / free path (Ollama + HuggingFace)
-
-```env
-LLM_PROVIDER=ollama
-OLLAMA_MODEL=llama3.2
-EMBEDDING_PROVIDER=huggingface
-HF_EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
-```
-
-Rebuild the index after changing the embedding model.
+| `OPENAI_API_KEY` | Chat (and OpenAI embeddings if selected) |
+| `EMBEDDING_PROVIDER` | `huggingface` (default local) or `openai` |
+| `LLM_MODEL` | Chat model |
+| `RETRIEVAL_K` / `SCORE_THRESHOLD` | Retriever policy |
 
 ## Project layout
 
 ```
-supportpearlz/
-├── data/knowledge_base/     # authored Pearlz documents (10+)
-├── data/vector_store/       # persisted Chroma index (git-ignored)
-├── src/
-│   ├── config.py
-│   ├── app_cli.py
-│   ├── app_streamlit.py     # Streamlit UI + API-key login
-│   ├── ingestion/           # loaders, chunking, build_index
-│   ├── retrieval/           # vector store, retriever, embeddings
-│   ├── chains/              # prompts, schemas, memory, rag_chain
-│   └── utils/logging_setup.py
-├── app.py                   # streamlit run app.py
-├── evaluation/              # test_questions.json + run_eval.py
-├── scripts/                 # KB generators + diagnostics
-└── docs/                    # architecture, report, screenshots
+app.py                      # Streamlit entry
+src/
+  auth/                     # bcrypt auth + SQLite users
+  storage/                  # conversations & messages
+  services/                 # RAG agent lifecycle
+  ui/                       # theme, components, views
+  ingestion/ retrieval/ chains/   # LangChain RAG core
+data/knowledge_base/        # authored Pearlz documents
 ```
 
-## Evaluation
+## Security
 
-```bash
-python -m evaluation.run_eval
-```
-
-Results land in `evaluation/results/` as JSON + a readable table.
-
-## Incremental policy updates
-
-If e.g. `refund_returns_policy.md` changes:
-
-```bash
-python -m src.ingestion.build_index --upsert-source refund_returns_policy.md
-```
-
-This **deletes chunks by source** then re-inserts — avoiding stale+new contradictions from a naive append. Full rebuild: `--rebuild`.
-
-## Diagnostics
-
-```bash
-python scripts/embedding_diagnostic.py
-python scripts/chunking_experiment.py --with-retrieval
-```
-
-## Known limitations
-
-- Relevance score scales are store/model specific; recalibrate `SCORE_THRESHOLD` after any embedding change.
-- Query condensation can mis-resolve referents on abrupt topic switches (logged as original vs rewritten).
-- Auto-eval scoring is heuristic; Task 11 report should include manual verdicts.
-- Hybrid search / reranker are optional advanced challenges, not required for the core mark set.
+- Passwords are **bcrypt-hashed** — never stored in plain text  
+- API keys are **not** stored in the user database (session / secrets / `.env` only)  
+- `.env`, `.venv`, `data/app.db`, and `data/vector_store/` are gitignored  
 
 ## License / academic integrity
 
